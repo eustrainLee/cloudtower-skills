@@ -14,8 +14,7 @@ const currentSpecPath = join(specsDir, "current-swagger.json");
 const swaggerBaseUrl = "https://code.smartx.com/specs";
 
 function addCloudTowerTitle(spec: OpenAPISpec) {
-  const originalTitle = spec.info?.title?.trim() ?? "";
-  const title = originalTitle || "cloudtower-api";
+  const title = "cloudtower-api";
 
   spec.info = {
     ...spec.info,

@@ -2,16 +2,21 @@
 
 This document describes the authentication methods supported by this API.
 
-## CloudTower Authentication Flow
+## API Credentials
 
-CloudTower API usage follows a simple two-step flow:
+CloudTower use token as credentials of the API. It will passed as `Authorization` header in request
 
-1) Call the `POST /login` operation to obtain an auth token.
-2) Include that token in the `Authorization` header for all other requests.
+You SHOULD ask user to give you username, password and login source or a token directly, you MUST tell user MUST NOT directly pass username and password to you, instead to tell you which environment variables or configuration files has already storage them and ready to use.
 
-All requests other than `POST /login` require the authorization header.
+## Authentication Workflow
 
-### Login Operation (User → `POST /login`)
+### token workflow
+
+If user directly pass token to you, you can directly use it to call API.
+
+### username and password workflow
+
+Call the `POST /login` operation to obtain a token, then use it as credentials for subsequent API calls. See the references for detailed information on the login operation and related schemas.
 
 **References:**
 
@@ -21,11 +26,6 @@ All requests other than `POST /login` require the authorization header.
 - Response schema: [WithTask_LoginResponse_](schemas/With/WithTask-LoginResponse.md)
 - Data schema: [LoginResponse](schemas/Login/LoginResponse.md)
 
-**Headers (optional):**
-
-- `content-language`
-- `external-cloudtower-id`
-
 **Default login source:**
 
 - `source` in `LoginInput` uses enum [UserSource](schemas/User/UserSource.md): `AUTHN`, `LDAP`, `LOCAL`, `SSO`.
@@ -34,16 +34,3 @@ All requests other than `POST /login` require the authorization header.
 **Request and response schemas:**
 
 See the referenced schema files for full request/response details.
-
-## Authorization
-
-**Type:** apiKey
-
-- **In:** header
-
-## Basic
-
-**Type:** http
-
-- **Scheme:** basic
-

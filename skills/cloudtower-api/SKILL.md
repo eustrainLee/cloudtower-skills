@@ -36,10 +36,9 @@ references/
 - `/v2/api`
 - Operation paths in `references/operations/*.md` should be called as `/v2/api` + operation path.
 
-
 ## Authentication
 
-Supported methods: **Authorization**, **Basic**. See `references/authentication.md` for details.
+see [Authentication](./references/authentication.md)
 
 ## Async Operations and Tasks
 
@@ -53,6 +52,18 @@ Use the task ID to track completion via the Task resource:
 - Operation: [GetTasks](references/operations/GetTasks.md)
 
 Poll the task until it finishes (success or failure), then fetch the latest resource state by ID. If `task_id` is `null`, the operation is synchronous and no polling is required.
+
+## Response handling
+
+For **any CloudTower API request**, as the response may be larget, you MUST NOT load the response directly into the agent context. Instead:
+
+1. generate a random request id based on timestamp and a random suffix, e.g. `tower_20240601_123456_abcdef`
+2. Write the full response to `/tmp/tower_{request_id}.json`.
+3. Return only a summary and the file path to the caller.
+4. Subsequent reads must use `head`, `tail`, `grep`, or `jq` to extract small portions.
+
+Exception: task query in [**Async Operations and Tasks**](#async-operations-and-tasks) section may bypass this rule when the response is small and ephemeral.
+
 ## Resources
 
 - **Vm** → `references/resources/Vm.md` (58 ops)
